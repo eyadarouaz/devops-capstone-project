@@ -26,6 +26,8 @@ HTTPS_ENVIRON = {'wsgi.url_scheme': 'https'}
 ######################################################################
 #  T E S T   C A S E S
 ######################################################################
+
+
 class TestAccountService(TestCase):
     """Account Service Tests"""
 
@@ -137,7 +139,7 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(data["name"], account.name)
-    
+
     def test_account_not_found(self):
         """It should not Read a non existant account"""
         response = self.client.get(
@@ -154,18 +156,18 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), 5)
-    
+
     def test_update_account(self):
         """It should Update an account"""
         account = AccountFactory()
         response = self.client.post(
-            BASE_URL, json = account.serialize()
+            BASE_URL, json=account.serialize()
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         new_account = response.get_json()
         new_account["email"] = "john@doe.com"
         response = self.client.put(
-            f"{BASE_URL}/{new_account['id']}", json = new_account
+            f"{BASE_URL}/{new_account['id']}", json=new_account
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_account = response.get_json()
@@ -192,7 +194,7 @@ class TestAccountService(TestCase):
             '/', environ_overrides=HTTPS_ENVIRON
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        headers = { 
+        headers = {
             'X-Frame-Options': 'SAMEORIGIN',
             'X-Content-Type-Options': 'nosniff',
             'Content-Security-Policy': 'default-src \'self\'; object-src \'none\'',
